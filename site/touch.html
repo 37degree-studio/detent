@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <title>Touch Ring: a tactile touch ring for the web and SwiftUI · Detent</title>
 <meta name="detent-signup" content="/api/subscribe">
+<script>try{const v=localStorage.getItem('detent-theme');if(v==='light'||v==='dark')document.documentElement.dataset.theme=v}catch{}</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cstyle%3E.b{fill:%23f4f4f3;stroke:%23dcdcda}.p{fill:%231d1d1f}%40media (prefers-color-scheme:dark){.b{fill:%231a1a1c;stroke:%232c2c30}.p{fill:%23ededee}}%3C/style%3E%3Crect class='b' x='1.5' y='1.5' width='29' height='29' rx='8.5' stroke-width='1'/%3E%3Crect class='p' x='14.6' y='5.5' width='2.8' height='9' rx='1.4'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cstyle%3E.b{fill:%23f4f4f3;stroke:%23dcdcda}.p{fill:%231d1d1f}%40media (prefers-color-scheme:dark){.b{fill:%231a1a1c;stroke:%232c2c30}.p{fill:%23ededee}}%3C/style%3E%3Crect class='b' x='1.5' y='1.5' width='29' height='29' rx='8.5' stroke-width='1'/%3E%3Crect class='p' x='14.6' y='5.5' width='2.8' height='9' rx='1.4'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#f6f6f5" media="(prefers-color-scheme: light)">
@@ -236,6 +237,18 @@ footer.end { border-top: 0; padding-top: 0; margin-top: clamp(96px, 12vw, 160px)
 .gate .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0 }
 .gate .gnote { font-size: 12.5px; color: var(--faint); max-width: 40ch }
 .gate .gerr { min-height: 1.2em; font-size: 13px; color: var(--ink) }
+
+/* Linejig illustrations */
+figure.lj { margin: 0; display: grid; gap: 8px; justify-items: center; width: 100% }
+figure.lj iframe { border: 0; width: 100%; max-width: 400px; aspect-ratio: 5 / 4; height: auto; opacity: 0; transition: opacity .3s; border-radius: 20px }
+figure.lj iframe.drawn { opacity: 1 }
+figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcaption a { color: var(--muted) }
+.gate figure.lj iframe { max-width: 260px }
+.gate figure.lj { margin-bottom: 20px }
+.installrow { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 40px; align-items: center }
+.installrow .steps { grid-template-columns: 1fr; gap: 22px }
+.installrow figure.lj iframe { background: var(--plate); border-radius: 28px }
+@media (max-width: 720px) { .installrow { grid-template-columns: 1fr } }
 </style>
 
 <div class="page">
@@ -8277,12 +8290,27 @@ private final class ClickSynth {
     [p.fn, `${p.fn}-look-${st.look}`].map(id => `\n<script>\n${src(id)}\n${END}\n`).join('');
   const home = document.getElementById('home'), detail = document.getElementById('detail');
 
+  // ── Illustrations: free figures from the Linejig library, in its Brand style with Detent's Braun orange as the one
+  // solid part. They follow the page's light or dark, and show once their first frame is drawn (3 s at most). ──
+  const LJ = 'https://linejig.com';
+  const pageTheme = () => document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const figure = (id, title, spot, plate) => `<figure class="lj"><iframe data-lj title="${title}, live illustration" width="400" height="320" loading="lazy"
+      src="${LJ}/${id}/index.html?embed=1&style=brand&brand=f2641e&plate=${plate}&intro=draw&dpr=1&theme=${pageTheme()}"></iframe>
+      <figcaption>Illustration from the <a href="${LJ}/library?utm_source=detent&amp;utm_medium=credit&amp;utm_campaign=${spot}" target="_blank" rel="noopener">Linejig library</a></figcaption></figure>`;
+  document.addEventListener('load', e => { if (e.target.matches?.('iframe[data-lj]')) e.target.contentWindow?.postMessage({ type: 'theme', value: pageTheme() }, LJ); }, true);
+  addEventListener('message', e => {
+    if (e.origin !== LJ || e.data?.type !== 'drawn') return;
+    document.querySelectorAll('iframe[data-lj]').forEach(f => { if (f.contentWindow === e.source) f.classList.add('drawn'); });
+  });
+  new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => n.querySelectorAll?.('iframe[data-lj]').forEach(f => setTimeout(() => f.classList.add('drawn'), 3000)))))
+    .observe(document.body, { childList: true, subtree: true });
+
   // ── Email gate: the code is shown and copied only after someone leaves an email. One email unlocks the whole site. ──
   // Signups go to Detent's own copy of Linejig's api/subscribe.js (same Blob store and Resend segment), on Detent's own domain.
   // A claude.ai artifact can't call it, so until the domain exists signups wait in this browser.
   const SIGNUP_URL = document.querySelector('meta[name="detent-signup"]')?.content || '';
   const unlocked = () => { try { return !!localStorage.getItem('detent-email'); } catch { return false; } };
-  const GATE = () => `<div class="gate"><form novalidate>
+  const GATE = () => `<div class="gate">${figure('empty-inbox', 'A letter tray', 'gate', 'fbfbfa,19191b')}<form novalidate>
       <b>Get the code</b>
       <p>Enter your email to unlock every snippet and SwiftUI file.</p>
       <div class="gf"><input type="email" name="email" placeholder="you@studio.com" autocomplete="email" required aria-label="Email"><input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true"><button class="btn dark" type="submit">Unlock the code</button></div>
@@ -8344,12 +8372,14 @@ private final class ClickSynth {
         <a class="cap" href="#${p.tag}"><h3>${p.name}</h3><span class="go">↗</span><p>${p.note}</p></a>
       </div>`).join('')}</div>
     <section class="sec" id="install"><div class="sh"><h2>Bring it into your project.</h2></div>
+      <div class="installrow"><div>
       <ol class="steps">
         <li><b>Open a control</b><span>Pick one from the collection above.</span></li>
         <li><b>Set it up</b><span>Choose its look and options. The code changes with you.</span></li>
         <li><b>Copy and paste</b><span>Enter your email once to unlock the code. One snippet: the control, its look, and the sound and haptics engine. No dependencies. For iPhone, copy the SwiftUI file instead.</span></li>
       </ol>
       <a class="btn dark" href="#${PARTS[0].tag}">Start with the ${PARTS[0].name} →</a>
+      </div>${figure('install-cartridge', 'A cartridge sliding into its slot', 'install', 'efefee,121213')}</div>
     </section>
     <section class="sec" id="faq"><div class="sh"><h2>Questions.</h2></div>
       <div class="faq">
@@ -8500,6 +8530,7 @@ private final class ClickSynth {
     const paint = () => {
       if (mode) document.documentElement.setAttribute('data-theme', mode); else document.documentElement.removeAttribute('data-theme');
       btn.dataset.mode = current();
+      document.querySelectorAll('iframe[data-lj]').forEach(f => f.contentWindow?.postMessage({ type: 'theme', value: current() }, 'https://linejig.com'));
       btn.setAttribute('aria-label', current() === 'dark' ? 'Switch to light' : 'Switch to dark');
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', current() === 'dark' ? '#0b0b0c' : '#f6f6f5');
     };
