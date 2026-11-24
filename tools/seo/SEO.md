@@ -77,10 +77,28 @@ linked icon has its file, and that `site/` is up to date.
 Structured data: the home has `WebSite`, `SoftwareSourceCode` and `FAQPage`. Each control's page has
 `SoftwareSourceCode` and `BreadcrumbList` (Components, its hub if it has one, the control). Each hub has
 `CollectionPage` with an `ItemList` of its controls, and `BreadcrumbList`.
+- `tools/seo/hook.mjs`: the pre-commit hook. `--install` and `--uninstall` set it up. Run with no option, it is what
+  the hook runs.
 
 ## Workflow
 
-After any change to `src/`, to `tools/seo/site.json`, or to a control's look:
+Install the pre-commit hook once per clone. Every worktree of the clone shares it.
+
+```bash
+npm run hooks
+```
+
+A commit that touches `src/`, `tools/build.mjs` or `tools/seo/` then redraws the changed share cards, rebuilds `site/`
+and runs the check. It adds `site/` and `tools/seo/og-hashes.json` to the same commit, so what Vercel deploys always
+matches the source. A commit that touches none of them runs nothing.
+
+The hook builds from the working tree. So it stops the commit when one of those inputs has unstaged changes or
+untracked files: stage them or set them aside, then commit again. It never stashes, because the stash is shared with
+other worktrees. If the build or the check fails, the commit stops and shows the error. Without Chrome the cards are
+skipped with a warning; set `CHROME=/path/to/chrome`. An existing `pre-commit` is kept as `pre-commit.local` and runs
+first. `node tools/seo/hook.mjs --uninstall` puts it back.
+
+Without the hook, run these after any change to `src/`, to `tools/seo/site.json`, or to a control's look:
 
 ```bash
 npm run og
@@ -95,6 +113,9 @@ npm run check
 ```
 
 `npm test` runs the check too.
+
+The sitemap has no `lastmod`. A date taken from git is always one commit behind for a build made before that commit,
+and Google uses `lastmod` only when it is consistently right.
 
 ## Still to do (off the code)
 

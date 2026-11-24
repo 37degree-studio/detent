@@ -8,7 +8,6 @@
 // from src/catalog.html. Each page gets its own head (title, description, canonical, share tags, JSON-LD) and its own
 // h1 and copy in static HTML, so search engines read it without running JavaScript. Copy and URLs: tools/seo/site.json.
 import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync, mkdirSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
@@ -68,12 +67,6 @@ for (const h of HUBS) ROUTES[`hub:${h.slug}`] = { path: h.path, title: title(h.t
 const url = path => ORIGIN + path;
 const cardFile = name => `og/${name}.png`;
 const card = name => existsSync(at('site', cardFile(name))) ? url('/' + cardFile(name)) : null;
-
-// ── Last change, for the sitemap: the newest commit touching what a page is made of. ──
-const lastmod = (() => {
-  try { return execFileSync('git', ['log', '-1', '--format=%cs', '--', 'src', 'tools/seo/site.json'], { cwd: root, encoding: 'utf8' }).trim() || null; }
-  catch { return null; }
-})();
 
 // ── Head: the same block on every page. ──
 const head = ({ path, title: t, description, image, imageAlt, jsonld }) => [
@@ -231,7 +224,7 @@ const indexable = [['/', 'index.html', 'home'], ...PARTS.map(p => [ROUTES[p.tag]
 out.set('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 ${MARK}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${indexable.map(([path]) => `  <url><loc>${url(path)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`).join('\n')}
+${indexable.map(([path]) => `  <url><loc>${url(path)}</loc></url>`).join('\n')}
 </urlset>
 `);
 out.set('sitemap-images.xml', `<?xml version="1.0" encoding="UTF-8"?>

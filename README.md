@@ -18,6 +18,8 @@ Made by [37degree](https://37degr.ee/?utm_source=detent&utm_medium=readme). MIT 
 
 ## Work on it
 
+Run `npm run hooks` once. A commit that changes `src/` or `tools/seo/` then rebuilds `site/` and carries it along, so what Vercel deploys always matches the source.
+
 ```bash
 npm run build
 ```
