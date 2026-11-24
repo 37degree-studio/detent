@@ -110,6 +110,9 @@ let shell = template
   .replace('  //PARTS', () => partsSrc)
   .replace(/<meta name="description"[^>]*>\n/, '').replace(/<meta property="og:[a-z]+"[^>]*>\n/g, '')
   .replace('<!--SEO:HUBS-->', () => HUBS.length ? `<span>${HUBS.map(h => `<a href="${h.path}" data-tag="">${esc(h.name)}</a>`).join(' · ')}</span>` : '');
+// iOS ignores an SVG touch icon, so the PNGs that tools/seo/og.mjs draws replace it once they exist.
+if (existsSync(at('site/apple-touch-icon.png'))) shell = shell.replace(/<link rel="apple-touch-icon" href="data:[^"]*">/, '<link rel="apple-touch-icon" href="/apple-touch-icon.png">');
+if (existsSync(at('site/og/favicon-32.png'))) shell = shell.replace(/<link rel="icon" type="image\/svg\+xml"/, m => `<link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">\n${m}`);
 for (const ph of ['<!--BLOCKS-->', '  //PARTS', '<title>Detent</title>', '<!--SEO:GRID-->', '<!--SEO:SHOWPIECE-->', '<!--SEO:HUBS-->', '<main id="detail" hidden></main>'])
   if (!template.includes(ph)) errors.push(`src/template.html is missing ${ph}`);
 if (errors.length) finish();
@@ -310,6 +313,12 @@ for (const [path, name] of indexable) {
 }
 for (const [, img] of out.get('sitemap-images.xml').matchAll(/<image:loc>([^<]+)<\/image:loc>/g)) {
   if (!img.startsWith(ORIGIN + '/') || !existsSync(at('site', img.slice(ORIGIN.length)))) errors.push(`site/sitemap-images.xml: image ${img} has no file in site/`);
+}
+for (const [name, body] of out) {
+  if (!name.endsWith('.html')) continue;
+  for (const [, href] of body.matchAll(/<link rel="(?:icon|apple-touch-icon)"[^>]* href="(\/[^"]*)"/g)) {
+    if (!existsSync(at('site', href))) errors.push(`site/${name}: icon ${href} has no file in site/`);
+  }
 }
 finish();
 

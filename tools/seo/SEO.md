@@ -27,6 +27,7 @@ This is judgement, not measurement: there is no search-volume data yet. Look aga
 | Not found | (any other path) | `site/404.html`, `noindex` |
 | Share cards | `/og/<slug>.png`, `/og/home.png` | drawn by `tools/seo/og.mjs` |
 | Sitemaps | `/sitemap.xml`, `/sitemap-images.xml` (each page's share card) | built by `tools/build.mjs` |
+| Icons | `/apple-touch-icon.png` (180×180), `/og/favicon-32.png` | drawn by `tools/seo/og.mjs` |
 
 Control slugs, hub slugs and the reserved names share one namespace: the build stops on a collision. A slug never
 changes once published. Rename the control and its title instead. If a URL must move, add a permanent
@@ -58,18 +59,20 @@ hub.
    in titles or descriptions.
 
 `node tools/build.mjs --check` enforces 1, 3 and 4. It also checks that JSON-LD parses, that the FAQ JSON-LD matches the
-visible questions word for word, that links point to real pages, that every image in `sitemap-images.xml` has its
-file, and that `site/` is up to date.
+visible questions word for word, that links point to real pages, that every image in `sitemap-images.xml` and every
+linked icon has its file, and that `site/` is up to date.
 
 ## Files
 
 - `tools/seo/site.json`: the name, origin, repo, studio, home copy, each control's slug, title and description, and the hubs.
   Change the domain here, then run `npm run og -- --force && npm run build`.
 - `tools/build.mjs`: builds every file in `site/` except the cards and `favicon.svg`: the home, one page per control,
-  one page per hub, `404.html`, `sitemap.xml`, `sitemap-images.xml`, `robots.txt` and `llms.txt`. It removes generated files that no page makes any more.
+  one page per hub, `404.html`, `sitemap.xml`, `sitemap-images.xml`, `robots.txt` and `llms.txt`. Once the icon PNGs
+  exist, it links them in place of the SVG touch icon in `src/template.html`. It removes generated files that no page makes any more.
   `tools/build.py` is a shim that runs it.
 - `tools/seo/og.mjs`: draws the share cards with the local Chrome, using the real controls. It redraws only the cards
   whose inputs changed (`tools/seo/og-hashes.json`). Use `--force` to redraw them all, or `--only home,clock` for some.
+  It also draws the Detent mark as `site/apple-touch-icon.png` (full-bleed, iOS rounds it) and `site/og/favicon-32.png`.
 
 Structured data: the home has `WebSite`, `SoftwareSourceCode` and `FAQPage`. Each control's page has
 `SoftwareSourceCode` and `BreadcrumbList` (Components, its hub if it has one, the control). Each hub has

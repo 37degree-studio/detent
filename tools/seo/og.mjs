@@ -6,7 +6,8 @@
 //   node tools/seo/og.mjs --force      draws every card
 //   node tools/seo/og.mjs --only clock,home
 //
-// Then run npm run build: pages link a card only once its PNG exists.
+// It also draws site/apple-touch-icon.png and site/og/favicon-32.png from the Detent mark.
+// Then run npm run build: pages link a card or an icon only once its PNG exists.
 import { readFileSync, writeFileSync, existsSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -86,6 +87,16 @@ const cards = [
     .map(h => ({ name: h.slug, headline: h.name, line: h.card.line, part: PARTS.find(p => p.tag === h.card.part), attrs: h.card.attrs || {} })),
 ].map(c => ({ name: c.name, png: `site/og/${c.name}.png`, size: [1200, 630], html: cardHtml(c) }));
 
+// The Detent mark in porcelain, as PNGs: iOS wants a full-bleed square (it rounds the corners itself); the favicon keeps its own corners.
+const notch = s => `<rect x="${s * 0.4563}" y="${s * 0.1719}" width="${s * 0.0875}" height="${s * 0.2813}" rx="${s * 0.0438}" fill="#1d1d1f"/>`;
+const icon = (s, svg) => `<!doctype html><html><style>html, body { margin: 0; background: transparent } svg { display: block }</style><svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">${svg}</svg></html>`;
+cards.push(
+  { name: 'apple-touch-icon', png: 'site/apple-touch-icon.png', size: [180, 180], html: icon(180,
+    `<defs><radialGradient id="g" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="#fbfbfa"/><stop offset="1" stop-color="#efefee"/></radialGradient></defs><rect width="180" height="180" fill="url(#g)"/>${notch(180)}`) },
+  { name: 'favicon-32', png: 'site/og/favicon-32.png', size: [32, 32], html: icon(32,
+    `<rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="#f4f4f3" stroke="#dcdcda"/>${notch(32)}`) },
+);
+
 const hashFile = at('tools/seo/og-hashes.json');
 const hashes = existsSync(hashFile) ? JSON.parse(readFileSync(hashFile, 'utf8')) : {};
 mkdirSync(at('site/og'), { recursive: true });
@@ -98,7 +109,7 @@ try {
     if (!FORCE && hashes[c.name] === hash && existsSync(png)) continue;
     const file = join(tmp, `${c.name}.html`);
     writeFileSync(file, c.html);
-    execFileSync(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1', `--window-size=${c.size}`,
+    execFileSync(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1', `--window-size=${c.size}`, '--default-background-color=00000000',
       '--virtual-time-budget=6000', `--user-data-dir=${join(tmp, 'profile')}`, `--screenshot=${png}`, pathToFileURL(file).href], { stdio: 'pipe' });
     hashes[c.name] = hash; drawn++;
     console.log(c.png);
