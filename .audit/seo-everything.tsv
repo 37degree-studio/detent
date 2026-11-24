@@ -18,3 +18,4 @@ ts	phase	decision	why	evidence	result
 2026-11-24T18:50:37Z	verify	the Linejig install illustration shows empty in the preview pane, and the same on production main	it predates this merge, so it is not a merge regression; cause not found	detent-gamma.vercel.app/#install iframe opacity 0	INCONCLUSIVE
 2026-11-24T18:50:37Z	docs	softened the static-copy rule in SEO.md from word for word to says what renderDetail draws, and named the gap	the reviewer showed nothing enforces it and the static page is a summary	tools/seo/SEO.md rule 1	done
 2026-11-24T18:50:37Z	close	supersedes the open rows from frame through hook: scope done, workers merged, lastmod fixed by dropping it	the earlier rows were never closed	rows 1-6, 9	done
+2026-11-24T18:50:58Z	docs	fixed README and a template comment that still said signups share Linejig's list, and the DETENT_URL step	main's 8492d6a changed the code but not these lines; the reviewer caught it	commit 2556bf2	done
