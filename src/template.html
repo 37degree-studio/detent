@@ -5,7 +5,6 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cstyle%3E.b{fill:%23f4f4f3;stroke:%23dcdcda}.p{fill:%231d1d1f}%40media (prefers-color-scheme:dark){.b{fill:%231a1a1c;stroke:%232c2c30}.p{fill:%23ededee}}%3C/style%3E%3Crect class='b' x='1.5' y='1.5' width='29' height='29' rx='8.5' stroke-width='1'/%3E%3Crect class='p' x='14.6' y='5.5' width='2.8' height='9' rx='1.4'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#f6f6f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
-<!--SEO-->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -238,17 +237,52 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
 
 <div class="page">
   <div class="bar">
-    <div class="left"><a class="mark" href="/"><i></i>Detent</a>
-    <nav class="nav"><a href="/">Components</a><a href="/#install">Install</a></nav></div>
+    <div class="left"><a class="mark" href="/" data-tag=""><i></i>Detent</a>
+    <nav class="nav"><a href="/#components" data-tag="" data-anchor="components">Components</a><a href="/#install" data-tag="" data-anchor="install">Install</a></nav></div>
     <div class="keys">
       <a class="key star" href="https://github.com/37degree-studio/detent" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Star on GitHub<span class="sep"></span><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg></a>
     </div>
   </div>
   <div class="dock" id="dock"><div class="dockf" id="dockf"></div><button class="ico" id="thm" type="button" aria-label="Switch to dark" title="Light or dark"><svg class="moon" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M16 12.4A6.5 6.5 0 0 1 7.6 4a6.5 6.5 0 1 0 8.4 8.4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><svg class="sun" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="3.4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v1.8M10 15.7v1.8M2.5 10h1.8M15.7 10h1.8M4.7 4.7l1.3 1.3M14 14l1.3 1.3M4.7 15.3L6 14M14 6l1.3-1.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button><button class="ico" id="snd" type="button" aria-pressed="true" aria-label="Sound" title="Sound"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3.5 7.5h3l4-3.5v12l-4-3.5h-3z" fill="currentColor"/><path class="on" d="M13.5 7a4 4 0 0 1 0 6M15.8 4.8a7 7 0 0 1 0 10.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path class="off" d="M13.5 7.5l5 5M18.5 7.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button><button class="ico" id="hap" type="button" aria-pressed="true" aria-label="Haptics" title="Haptics"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="6.5" y="3" width="7" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><path class="on" d="M3.5 7v6M16.5 7v6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path class="off" d="M3 17L17 3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
-  <main id="home"></main>
+  <main id="home">
+    <section class="hero">
+      <div class="lead">
+        <span class="small">A library for the hands</span>
+        <h1>Every notch.<br><span>Every stop.</span></h1>
+        <p>Dials, knobs and switches that behave like hardware: they hold against each detent, click over, and stop dead at the ends. Copy one into any page, or into an iPhone app.</p>
+        <div class="row"><a class="btn dark" href="{{START_HREF}}" data-tag="{{START_TAG}}">Explore components →</a><a class="btn" href="/#install" data-tag="" data-anchor="install">How to install</a></div>
+      </div>
+      <figure class="showpiece">
+        <div class="stage"><!--SEO:SHOWPIECE--></div>
+        <figcaption>Flick the ring. It carries on for two to four clicks, then stops.</figcaption>
+      </figure>
+    </section>
+    <div class="homegap"></div>
+    <div class="sechead" id="components"><div><span class="small">Explore the collection</span><h2>Every control, ready to turn.</h2></div></div>
+    <div class="grid"><!--SEO:GRID--></div>
+    <section class="sec" id="install"><div class="sh"><h2>Bring it into your project.</h2></div>
+      <div class="installrow"><div>
+      <ol class="steps">
+        <li><b>Open a control</b><span>Pick one from the collection above.</span></li>
+        <li><b>Set it up</b><span>Choose its look and options. The code changes with you.</span></li>
+        <li><b>Copy and paste</b><span>Enter your email once to unlock the code. One snippet: the control, its look, and the sound and haptics engine. No dependencies. For iPhone, copy the SwiftUI file instead.</span></li>
+      </ol>
+      <a class="btn dark" href="{{START_HREF}}" data-tag="{{START_TAG}}">Start with the {{START_NAME}} →</a>
+      </div><span class="lj-slot" data-lj="install-cartridge" data-title="A cartridge sliding into its slot" data-spot="install" data-plate="efefee,121213"></span></div>
+    </section>
+    <section class="sec" id="faq"><div class="sh"><h2>Questions.</h2></div>
+      <div class="faq">
+        <details><summary>Is it free?</summary><p>Yes. Every control, look, the sound and haptics engine, and the SwiftUI files are MIT. Use them in anything.</p></details>
+        <details><summary>Do haptics work on iPhone?</summary><p>On Android they use the vibration API. On iPhone, Safari has no vibration API, so web haptics play from iOS 18 on. The SwiftUI versions use the Taptic Engine on any iPhone.</p></details>
+        <details><summary>Does it need a framework?</summary><p>No. Each control is one web component with no dependencies, so it works in plain HTML, React, Vue, Svelte or anything else that renders HTML.</p></details>
+        <details><summary>Can you make a custom control for my product?</summary><p>Yes. Detent is made by <a href="https://37degr.ee/?utm_source=detent&amp;utm_medium=faq" target="_blank" rel="noopener">37degree</a>, a design studio that takes custom work: controls, interfaces and sites for your product.</p></details>
+      </div>
+    </section>
+  </main>
   <main id="detail" hidden></main>
   <footer class="end">
     <span>Detent is created by <a href="https://37degr.ee/?utm_source=detent&amp;utm_medium=footer" target="_blank" rel="noopener">37degree</a>, designed by Puru Sharma.</span>
+    <!--SEO:HUBS-->
     <span><a href="https://github.com/37degree-studio/detent" target="_blank" rel="noopener">GitHub</a> · MIT</span>
   </footer>
 </div>
@@ -278,6 +312,13 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
   const snippet = (p, st) => `<!-- ${p.name} · Detent -->\n${tag(p, attrText(stateAttrs(p, st)))}\n\n<!-- Feel: sound + haptics. Paste once per page, before any Detent control. -->\n<script>\n${src('feel')}\n${END}\n` +
     [p.fn, `${p.fn}-look-${st.look}`].map(id => `\n<script>\n${src(id)}\n${END}\n`).join('');
   const home = document.getElementById('home'), detail = document.getElementById('detail');
+  // ROUTES (written by tools/seo/build.mjs): tag → { path, title, description, hub? }; '' is the home, hub:<slug> a hub. The deployed site has a real
+  // page per control; anywhere else (a file, a preview with no server) the same links fall back to the #tag routes.
+  const ROUTES = (() => { try { return JSON.parse(document.getElementById('detent-routes').textContent); } catch { return {}; } })();
+  const clean = path => path.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/(.)\/$/, '$1');
+  const PATHS = !!document.querySelector('meta[name="detent-paths"]') && Object.values(ROUTES).some(r => r.path === clean(location.pathname));
+  const hrefOf = p => PATHS && ROUTES[p.tag] ? ROUTES[p.tag].path : '#' + p.tag;
+  let currentTag = '';
 
   // ── Illustrations: free figures from the Linejig library, in its Brand style with Detent's Braun orange as the one
   // solid part. They follow the page's light or dark, and show once their first frame is drawn (3 s at most). ──
@@ -294,8 +335,11 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
   new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => n.querySelectorAll?.('iframe[data-lj]').forEach(f => setTimeout(() => f.classList.add('drawn'), 3000)))))
     .observe(document.body, { childList: true, subtree: true });
 
+  // The static home marks where an illustration goes; it is drawn here because its theme comes from the page.
+  document.querySelectorAll('.lj-slot').forEach(s => s.outerHTML = figure(s.dataset.lj, s.dataset.title, s.dataset.spot, s.dataset.plate));
+
   // ── Email gate: the code is shown and copied only after someone leaves an email. One email unlocks the whole site. ──
-  // Signups go to Detent's own copy of Linejig's api/subscribe.js (same Blob store and Resend segment), on Detent's own domain.
+  // Signups go to api/subscribe.js on Detent's own domain, which keeps them in Detent's own Blob store and Resend segment.
   // A claude.ai artifact can't call it, so until the domain exists signups wait in this browser.
   const SIGNUP_URL = document.querySelector('meta[name="detent-signup"]')?.content || '';
   const unlocked = () => { try { return !!localStorage.getItem('detent-email'); } catch { return false; } };
@@ -307,7 +351,7 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
       <small class="gnote">We’ll email product news and new controls. Reply to any email to be taken off the list.</small>
     </form></div>`;
   async function signup(email) {
-    const body = { email, source: 'detent', figure: location.hash.slice(1) || 'home', website: '' };
+    const body = { email, source: 'detent', figure: currentTag || 'home', website: '' };
     if (!SIGNUP_URL) { try { const q = JSON.parse(localStorage.getItem('detent-pending') || '[]'); q.push(body); localStorage.setItem('detent-pending', JSON.stringify(q)); } catch {} return; }
     const r = await fetch(SIGNUP_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || ''); }
@@ -337,47 +381,10 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
   }
 
   // ── Home: the catalogue ──
-  home.innerHTML = `
-    <section class="hero">
-      <div class="lead">
-        <span class="small">A library for the hands</span>
-        <h1>Every notch.<br><span>Every stop.</span></h1>
-        <p>Dials, knobs and switches that behave like hardware: they hold against each detent, click over, and stop dead at the ends. Copy one into any page, or into an iPhone app.</p>
-        <div class="row"><a class="btn dark" href="#${PARTS[0].tag}">Explore components →</a><a class="btn" href="#install">How to install</a></div>
-      </div>
-      <figure class="showpiece">
-        <div class="stage">${(() => { const b = PARTS.find(x => x.tag === 'detent-bezel'); return tag(b, attrText(Object.assign({}, b.attrs.light, { look: 'braun', mode: 'weighted' }))); })()}</div>
-        <figcaption>Flick the ring. It carries on for two to four clicks, then stops.</figcaption>
-      </figure>
-    </section>
-    <div class="homegap"></div>
-    <div class="sechead"><div><span class="small">Explore the collection</span><h2>Every control, ready to turn.</h2></div></div>
-    <div class="filters" id="hfilters">
+  // The home is static HTML (tools/seo/build.mjs fills its grid from PARTS), so crawlers read it. Here it only gets its look filter.
+  document.getElementById('dockf').insertAdjacentHTML('beforeend', `<div class="filters" id="hfilters">
       <div class="f"><span>Look</span><div class="seg" data-h="look">${['braun', 'nothing', 'index', 'aqua', 'pedal'].map(l => `<button type="button" data-v="${l}">${LOOK_NAMES[l]}</button>`).join('')}</div></div>
-    </div>
-    <div class="grid">${PARTS.map((p, i) => `
-      <div class="plate${['detent-bezel', 'detent-clock'].includes(p.tag) || p.wide ? ' big' : ''}">
-        <div class="stage" data-i="${i}">${p.kind.toLowerCase() !== p.name.toLowerCase() ? `<span class="tag">${p.kind}</span>` : ''}${tag(p, attrText(p.attrs.light))}</div>
-        <a class="cap" href="#${p.tag}"><h3>${p.name}</h3><span class="go">↗</span><p>${p.note}</p></a>
-      </div>`).join('')}</div>
-    <section class="sec" id="install"><div class="sh"><h2>Bring it into your project.</h2></div>
-      <div class="installrow"><div>
-      <ol class="steps">
-        <li><b>Open a control</b><span>Pick one from the collection above.</span></li>
-        <li><b>Set it up</b><span>Choose its look and options. The code changes with you.</span></li>
-        <li><b>Copy and paste</b><span>Enter your email once to unlock the code. One snippet: the control, its look, and the sound and haptics engine. No dependencies. For iPhone, copy the SwiftUI file instead.</span></li>
-      </ol>
-      <a class="btn dark" href="#${PARTS[0].tag}">Start with the ${PARTS[0].name} →</a>
-      </div>${figure('install-cartridge', 'A cartridge sliding into its slot', 'install', 'efefee,121213')}</div>
-    </section>
-    <section class="sec" id="faq"><div class="sh"><h2>Questions.</h2></div>
-      <div class="faq">
-        <details><summary>Is it free?</summary><p>Yes. Every control, look, the sound and haptics engine, and the SwiftUI files are MIT. Use them in anything.</p></details>
-        <details><summary>Do haptics work on iPhone?</summary><p>On Android they use the vibration API. On iPhone, Safari has no vibration API, so web haptics play from iOS 18 on. The SwiftUI versions use the Taptic Engine on any iPhone.</p></details>
-        <details><summary>Does it need a framework?</summary><p>No. Each control is one web component with no dependencies, so it works in plain HTML, React, Vue, Svelte or anything else that renders HTML.</p></details>
-        <details><summary>Can you make a custom control for my product?</summary><p>Yes. Detent is made by <a href="https://37degr.ee/?utm_source=detent&amp;utm_medium=faq" target="_blank" rel="noopener">37degree</a>, a design studio that takes custom work: controls, interfaces and sites for your product.</p></details>
-      </div>
-    </section>`;
+    </div>`);
 
   // Home filters: one look and one material across the whole catalogue. A control without that look keeps its own.
   // The chosen look is one setting for the whole site, remembered between visits.
@@ -396,12 +403,8 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
     });
   };
   const setLook = l => { hs.look = l; try { localStorage.setItem('detent-look', l); } catch {} paintHome(); detailHook?.(l); };
-  home.querySelector('#hfilters').addEventListener('click', e => { const b = e.target.closest('[data-h=look] button'); if (b) setLook(b.dataset.v); });
+  document.getElementById('hfilters').addEventListener('click', e => { const b = e.target.closest('[data-h=look] button'); if (b) setLook(b.dataset.v); });
   paintHome();
-  {
-    const bar = home.querySelector('#hfilters'), grid = home.querySelector('.grid');
-    document.getElementById('dockf').append(bar);
-  }
 
   // A control never gets cropped: if it's wider than its box, it's shown smaller.
   const fit = (root) => root.querySelectorAll('.look .shot, .plate .stage, .showpiece .stage').forEach(box => {
@@ -422,7 +425,7 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
     const sample = k => { const v = p.attrs.light[k] ?? p.attrs.dark[k]; return v === '' ? 'boolean' : v !== undefined ? `"${v}"` : '—'; };
     const ABOUT = { value: 'The starting value. Read the live one from el.value.', label: 'The printed or spoken name.', detents: 'How many notches; 0 makes it smooth and silent.', checked: 'Starts switched on.', name: 'Submits with forms under this name.', mode: 'ratchet, or weighted so a flick carries on 2 to 4 clicks.', direction: 'both, or one-way like a dive bezel.', detent: 'center adds a bump at 12 o’clock.', min: 'The lowest value.', max: 'The highest value.', steps: 'How many positions.', options: 'The positions, comma-separated.', time: 'The starting time, HH:MM.' };
     detail.innerHTML = `
-      <nav class="crumbs"><a href="/">Components</a><span>›</span><span>${p.group}</span><span>›</span><span>${p.name}</span></nav>
+      <nav class="crumbs"><a href="${PATHS ? '/#components' : '#'}" data-tag="">Components</a><span>›</span>${ROUTES[p.tag]?.hub ? `<a href="${PATHS ? ROUTES[p.tag].hub : '#'}" data-tag="">${p.group}</a>` : `<span>${p.group}</span>`}<span>›</span><span>${p.name}</span></nav>
       <div class="dhead"><h1 tabindex="-1">${p.name}</h1><p>${p.lede}</p></div>
       <div class="tabs" role="tablist"><button role="tab" type="button" data-tab="preview">◎ Preview</button><button role="tab" type="button" data-tab="code">&lt;/&gt; Code</button></div>
       <div id="dview"></div>
@@ -449,7 +452,7 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
         </tbody></table></div>
       </section>
       <section class="sec"><div class="sh"><h2>How it behaves.</h2></div><dl class="behave">${p.behaviors.map(([t, x]) => `<div><dt>${t}</dt><dd>${x}</dd></div>`).join('')}</dl></section>
-      <nav class="pager"><a href="#${prev.tag}"><span class="small">Previous</span><b>${prev.name}</b></a><a href="#${next.tag}"><span class="small">Next</span><b>${next.name}</b></a></nav>`;
+      <nav class="pager"><a href="${hrefOf(prev)}" data-tag="${prev.tag}"><span class="small">Previous</span><b>${prev.name}</b></a><a href="${hrefOf(next)}" data-tag="${next.tag}"><span class="small">Next</span><b>${next.name}</b></a></nav>`;
 
     const view = detail.querySelector('#dview'), log = detail.querySelector('#log'), events = [];
     const paint = () => {
@@ -491,20 +494,30 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
     requestAnimationFrame(() => fit(detail));
   };
 
-  let firstRoute = true;
+  // Links carry data-tag. On the deployed site they are real links between real pages; anywhere else they switch the #hash.
+  if (!PATHS) document.querySelectorAll('a[data-tag]').forEach(a => a.setAttribute('href', '#' + (a.dataset.tag || a.dataset.anchor || '')));
+  const setHead = (r, fallback) => {
+    document.title = r ? r.title : fallback;
+    if (r) document.querySelector('meta[name="description"]')?.setAttribute('content', r.description);
+  };
   const route = () => {
-    // a control's own page (/encoder) opens on it once; after that the hash decides
-    const want = location.hash || (firstRoute ? document.querySelector('meta[name="detent-route"]')?.content || '' : '');
-    firstRoute = false;
-    const p = PARTS.find(x => '#' + x.tag === want);
+    const byHash = PARTS.find(x => '#' + x.tag === location.hash);
+    // An old #detent-… link on the deployed site moves to the control's own page.
+    if (PATHS && byHash && ROUTES[byHash.tag]) return location.replace(ROUTES[byHash.tag].path);
+    // A control's own page opened with no server (a file) has no home in it, so it shows its control.
+    const p = byHash || (PATHS ? PARTS.find(x => ROUTES[x.tag]?.path === clean(location.pathname)) : PARTS.find(x => x.tag === detail.dataset.tag));
     if (p) {
       if (!home.hidden) homeScroll = scrollY;
+      currentTag = p.tag;
       home.hidden = true; detail.hidden = false; document.body.classList.add('ondetail'); renderDetail(p);
-      document.title = `${p.name}: a tactile ${p.kind.toLowerCase()} for the web and SwiftUI · Detent`; scrollTo(0, 0);
+      setHead(ROUTES[p.tag], `${p.name} · Detent`); scrollTo(0, 0);
       detail.querySelector('h1').focus({ preventScroll: true });
     } else {
-      detailHook = null; detail.hidden = true; detail.innerHTML = ''; home.hidden = false; document.body.classList.remove('ondetail'); document.title = 'Detent: tactile dials, knobs and switches for the web and SwiftUI';
-      if (location.hash === '#install') document.getElementById('install').scrollIntoView(); else scrollTo(0, homeScroll);
+      currentTag = '';
+      detailHook = null; detail.hidden = true; detail.innerHTML = ''; home.hidden = false; document.body.classList.remove('ondetail');
+      setHead((PATHS && Object.values(ROUTES).find(r => r.path === clean(location.pathname))) || ROUTES[''], 'Detent');
+      const anchor = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+      if (anchor) anchor.scrollIntoView(); else scrollTo(0, homeScroll);
     }
   };
   addEventListener('hashchange', route);

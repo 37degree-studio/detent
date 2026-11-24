@@ -10,7 +10,7 @@ import { handle } from '../api/subscribe.js';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const port = Number(process.env.PORT || 4341);
-const types = { '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png' };
+const types = { '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8' };
 
 const live = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 const env = live ? process.env : { ...process.env, BLOB_READ_WRITE_TOKEN: 'local', RESEND_API_KEY: '' };
@@ -29,10 +29,15 @@ createServer(async (req, res) => {
     res.writeHead(out.status, Object.fromEntries(out.headers)); res.end(await out.text());
     return;
   }
-  let path = normalize(url.pathname === '/' ? '/index.html' : url.pathname);
-  if (!extname(path)) path += '.html';   // /encoder serves encoder.html, as cleanUrls does on Vercel
-  try {
-    const body = await readFile(join(root, 'site', path));
-    res.writeHead(200, { 'Content-Type': types[extname(path)] || 'application/octet-stream' }); res.end(body);
-  } catch { res.writeHead(404); res.end('Not found'); }
+  // Clean URLs, as Vercel serves them (vercel.json cleanUrls): /encoder is site/encoder.html; anything else gets 404.html.
+  const path = normalize(url.pathname === '/' ? '/index.html' : url.pathname);
+  for (const file of extname(path) ? [path] : [path + '.html', path]) {
+    try {
+      const body = await readFile(join(root, 'site', file));
+      res.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream' }); res.end(body);
+      return;
+    } catch {}
+  }
+  res.writeHead(404, { 'Content-Type': types['.html'] });
+  res.end(await readFile(join(root, 'site', '404.html')).catch(() => 'Not found'));
 }).listen(port, '127.0.0.1', () => console.log(`Detent on http://localhost:${port} (signups ${live ? 'go to the real Blob store' : 'saved to .signups/'})`));
