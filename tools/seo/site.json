@@ -1,0 +1,71 @@
+{
+  "note": "The one place for Detent's search copy and URLs (tools/seo/SEO.md). build.mjs reads it on every build. A path is permanent once published: change a title, never a slug (or add a redirect in vercel.json). Titles are the subject first; build.mjs adds ' · ' + name and refuses anything over 60 characters. Descriptions are one or two plain sentences under 160 characters: no counts typed by hand, no invented numbers, no other project's name. Every control in PARTS (src/catalog.html) needs an entry under parts, keyed by its tag; the build stops if one is missing.",
+  "name": "Detent",
+  "origin": "https://detent.37degr.ee",
+  "repo": "https://github.com/37degree-studio/detent",
+  "license": "MIT",
+  "studio": {
+    "name": "37degree",
+    "url": "https://37degr.ee/"
+  },
+  "home": {
+    "title": "Tactile dials, knobs and switches, web and SwiftUI",
+    "description": "Dials, knobs and switches that behave like hardware, with sound and haptics. Web components and SwiftUI files, free and MIT. Made by 37degree.",
+    "card": {
+      "headline": "Every notch. Every stop.",
+      "line": "Tactile dials, knobs and switches for the web and iPhone.",
+      "part": "detent-bezel",
+      "attrs": {
+        "look": "braun",
+        "value": "4"
+      }
+    }
+  },
+  "parts": {
+    "detent-encoder": {
+      "slug": "encoder",
+      "title": "Encoder: a detented rotary knob for web and SwiftUI",
+      "description": "A rotary encoder knob with 60 detents, a click per notch and hard end stops. A web component with no dependencies, plus a SwiftUI file. Free, MIT."
+    },
+    "detent-pot": {
+      "slug": "pot",
+      "title": "Pot: a potentiometer knob for web and SwiftUI",
+      "description": "A guitar-pedal potentiometer knob with fine ticks, hard stops, an optional centre detent and double-click reset. Web component and SwiftUI, MIT."
+    },
+    "detent-bezel": {
+      "slug": "bezel",
+      "title": "Bezel: a ratcheting rotary dial for web and SwiftUI",
+      "description": "An endless ratcheting bezel dial that clicks into each position, with a weighted mode that coasts after a flick. Web component and SwiftUI, MIT."
+    },
+    "detent-touch": {
+      "slug": "touch-ring",
+      "title": "Touch Ring: a dot touch wheel for web and SwiftUI",
+      "description": "A touch wheel with no moving parts: dots fill as you slide around it, with a tiny tick per step. A web component and a SwiftUI file, free and MIT."
+    },
+    "detent-switch": {
+      "slug": "switch",
+      "title": "Switch: a tactile toggle switch for web and SwiftUI",
+      "description": "A slide toggle switch that holds against its detent, then snaps over with a two-part click and haptics. Web component and SwiftUI file, MIT."
+    },
+    "detent-selector": {
+      "slug": "selector",
+      "title": "Selector: a rotary switch for web and SwiftUI",
+      "description": "A rotary selector switch with a few positions, each a spring detent that snaps over with a click, and hard end stops. Web component and SwiftUI, MIT."
+    },
+    "detent-slot": {
+      "slug": "slot",
+      "title": "Slot: a slide selector switch for web and SwiftUI",
+      "description": "A hi-fi style vertical slide selector: the cap snaps into each named position with a click and stops hard at the ends. Web component and SwiftUI, MIT."
+    },
+    "detent-scrubber": {
+      "slug": "time-scrubber",
+      "title": "Time scrubber: a 24-hour slider for web and SwiftUI",
+      "description": "A glass lens slides along a 24-hour scale, clicking every quarter hour and firmer on the hour, and coasts when flicked. Web component and SwiftUI, MIT."
+    },
+    "detent-clock": {
+      "slug": "clock",
+      "title": "Clock: a time picker you set like a real clock",
+      "description": "A clock time picker: turn the face and the minute hand clicks into each minute, the hour hand follows, and an A/P pusher sets the half. Web and SwiftUI, MIT."
+    }
+  }
+}

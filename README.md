@@ -10,7 +10,8 @@ Made by [37degree](https://37degr.ee/?utm_source=detent&utm_medium=readme). MIT 
 |---|---|
 | `src/catalog.html` | The approved controls: every control, look and SwiftUI file, as `<script id="src-…">` blocks, plus the `PARTS` catalogue. The source of truth. |
 | `src/template.html` | The site's page: home, component pages, bottom bar, email gate. |
-| `tools/build.py` | Puts the two together into `site/index.html`. |
+| `tools/build.mjs` | Puts the two together into `site/`: the home, one page per control (`/encoder`, `/clock`, …), the 404, sitemap, robots and llms.txt. |
+| `tools/seo/` | Search: titles, descriptions and URLs (`site.json`), the share cards (`og.mjs`) and the rules (`SEO.md`). |
 | `site/` | What gets deployed. |
 | `api/subscribe.js` | The email gate's endpoint, a copy of Linejig's, writing to the same Blob store and Resend segment. Every record is tagged `source: "detent"`. |
 | `swift/` | The SwiftUI files on their own. |
@@ -20,6 +21,9 @@ Made by [37degree](https://37degr.ee/?utm_source=detent&utm_medium=readme). MIT 
 ```bash
 npm run build
 ```
+
+After a change to a control or its look, redraw the share cards first with `npm run og`. `npm run check` reports any
+page that breaks the search rules in `tools/seo/SEO.md`.
 
 ```bash
 npm run dev
@@ -33,7 +37,7 @@ npm test
 
 ## Deploy (Vercel)
 
-1. Create a Vercel project from this folder. Output directory is `site`, there's no build command (run `npm run build` before deploying).
+1. Create a Vercel project from this folder. Output directory is `site`, there's no build command (run `npm run build` before deploying). `vercel.json` turns on clean URLs, so `site/encoder.html` is served at `/encoder`.
 2. Copy these environment variables from the Linejig project so signups land in the same list:
    - `BLOB_READ_WRITE_TOKEN` (the `keyline-signups` store)
    - `RESEND_API_KEY` and `RESEND_SEGMENT_ID`

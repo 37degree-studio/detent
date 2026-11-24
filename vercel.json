@@ -1,4 +1,6 @@
 { "outputDirectory": "site", "buildCommand": "", "framework": null,
+  "cleanUrls": true, "trailingSlash": false,
   "headers": [
-    { "source": "/(.*)", "has": [{ "type": "host", "value": "(.*)\\.vercel\\.app" }], "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "(.*)\\.vercel\\.app" }], "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
+    { "source": "/og/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }
   ] }

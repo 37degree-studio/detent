@@ -1,0 +1,20 @@
+# Detent
+
+> Dials, knobs and switches that behave like hardware, with sound and haptics. Web components and SwiftUI files, free and MIT. Made by 37degree. Each control is one web component with no dependencies, with a SwiftUI version for iPhone and iPad, in several looks, light and dark.
+
+## Controls
+
+- [Encoder](https://detent.37degr.ee/encoder): Detented rotary encoder: 0 to 100 over 270 degrees, 60 notches, hard end stops.
+- [Pot](https://detent.37degr.ee/pot): Guitar-pedal pot: turns smoothly over 300 degrees with a fine tick every twentieth, hard end stops, an optional centre detent, and double-click to reset.
+- [Bezel](https://detent.37degr.ee/bezel): Ratcheting bezel: a dB and level scale on an endless ring that clicks into 20 positions under a fixed index; weighted mode lets a flick coast 2 to 4 clicks.
+- [Touch Ring](https://detent.37degr.ee/touch-ring): A touch ring with no moving parts: slide around it and marks light up to the value, with one tiny tick per mark.
+- [Switch](https://detent.37degr.ee/switch): Slide switch: the thumb holds against its detent, then snaps over center into a hard stop.
+- [Selector](https://detent.37degr.ee/selector): Rotary selector switch: a few positions over 270 degrees, each a spring detent that snaps over center with a click, hard end stops.
+- [Slot](https://detent.37degr.ee/slot): Vertical slide selector: named positions from the bottom up, each a spring detent the cap snaps into with a click, hard end stops.
+- [Time scrubber](https://detent.37degr.ee/time-scrubber): A 24-hour time scale that clicks every quarter hour, firmer on the hour, coasts a few notches when flicked and stops hard at both ends.
+- [Clock](https://detent.37degr.ee/clock): A clock you set like a real one: the minute hand clicks into each minute through the setting train, the hour hand follows 12:1, and an A/P pusher switches the day half.
+
+## Links
+
+- [Source on GitHub](https://github.com/37degree-studio/detent) (MIT)
+- [37degree](https://37degr.ee/), the studio that makes Detent
