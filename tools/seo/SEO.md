@@ -22,7 +22,7 @@ This is judgement, not measurement: there is no search-volume data yet. Look aga
 | What | URL | File |
 |---|---|---|
 | Home | `/` | `site/index.html` |
-| A control | `/<slug>`, e.g. `/encoder` | `site/<slug>.html`, served by `cleanUrls` |
+| A control | `/<slug>`, e.g. `/encoder`, `/touch`, `/scrubber` | `site/<slug>.html`, served by `cleanUrls` |
 | A hub | `/<slug>`, e.g. `/dials`, `/switches` | `site/<slug>.html`, from `hubs` in `site.json` |
 | Not found | (any other path) | `site/404.html`, `noindex` |
 | Share cards | `/og/<slug>.png`, `/og/home.png` | drawn by `tools/seo/og.mjs` |
@@ -46,8 +46,10 @@ hub.
 ## Rules for every page
 
 1. The `<h1>` and the first paragraph are **in the HTML**. JavaScript may redraw them, but must not be the only thing
-   that writes them. The home lives as static HTML in `src/template.html`. Each control's page gets its static copy from
-   `tools/build.mjs`. Keep that copy word for word what `renderDetail` draws.
+   that writes them. The home and the hubs are static HTML. Each control's page gets a static summary from
+   `tools/build.mjs`: its crumbs, h1, lede, looks, behaviours and pager. Each of these must say what `renderDetail`
+   draws for it. The app then adds the live preview, options, code box and attribute table. Nothing checks that the two
+   agree yet, so change both together.
 2. Links between pages are real `<a href>` elements carrying `data-tag`. Without a server (a file or a preview), the
    app turns them into `#tag` links.
 3. Each page has a unique `<title>` of 60 characters or fewer, with the subject first and ` · Detent` last. It also has

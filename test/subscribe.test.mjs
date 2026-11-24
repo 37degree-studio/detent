@@ -34,7 +34,7 @@ test('rejects a bad email', async () => {
   assert.equal(r.status, 400);
 });
 
-test('says so when nothing is set up', async () => {
-  const r = await handle(post({ email: 'a@b.co' }), {}, async () => assert.fail('saved'));
+test('with no store of its own, refuses rather than sending anywhere else', async () => {
+  const r = await handle(post({ email: 'a@b.co' }), { fetch: async () => assert.fail('sent elsewhere') }, async () => assert.fail('saved'));
   assert.equal(r.status, 503);
 });

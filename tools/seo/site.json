@@ -38,7 +38,7 @@
       "description": "An endless ratcheting bezel dial that clicks into each position, with a weighted mode that coasts after a flick. Web component and SwiftUI, MIT."
     },
     "detent-touch": {
-      "slug": "touch-ring",
+      "slug": "touch",
       "title": "Touch Ring: a dot touch wheel for web and SwiftUI",
       "description": "A touch wheel with no moving parts: dots fill as you slide around it, with a tiny tick per step. A web component and a SwiftUI file, free and MIT."
     },
@@ -58,7 +58,7 @@
       "description": "A hi-fi style vertical slide selector: the cap snaps into each named position with a click and stops hard at the ends. Web component and SwiftUI, MIT."
     },
     "detent-scrubber": {
-      "slug": "time-scrubber",
+      "slug": "scrubber",
       "title": "Time scrubber: a 24-hour slider for web and SwiftUI",
       "description": "A glass lens slides along a 24-hour scale, clicking every quarter hour and firmer on the hour, and coasts when flicked. Web component and SwiftUI, MIT."
     },

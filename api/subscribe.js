@@ -1,6 +1,7 @@
-// POST /api/subscribe: the email gate in front of Detent's code. A copy of Linejig's api/subscribe.js, so Detent's
-// signups land in the same places: one private JSON file per signup in the shared Vercel Blob store (same
-// BLOB_READ_WRITE_TOKEN), and, when RESEND_API_KEY is set, a contact in the same Resend segment (RESEND_SEGMENT_ID).
+// POST /api/subscribe: the email gate in front of Detent's code, adapted from Linejig's api/subscribe.js. Detent's
+// signups are kept apart from Linejig's: one private JSON file per signup in Detent's own Vercel Blob store
+// (BLOB_READ_WRITE_TOKEN on the Detent project), and, when RESEND_API_KEY is set, a contact in Detent's own Resend
+// segment (RESEND_SEGMENT_ID). With neither set it refuses the signup; it never sends one anywhere else.
 // Every record is tagged source "detent", and figure is the control page it came from.
 // With NOTIFY_TO and NOTIFY_FROM the owner gets a short notice; with THANKS_FROM (or NOTIFY_FROM) a first-time signup
 // gets a thank-you. A signup succeeds when Blob or Resend kept it.

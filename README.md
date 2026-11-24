@@ -2,7 +2,7 @@
 
 Dials, knobs and switches that behave like hardware: they hold against each detent, click over, and stop dead at the ends. Nine controls, five looks each, light and dark, with sound and haptics built in. Web components with no dependencies, plus a SwiftUI file for each.
 
-Made by [37degree](https://37degr.ee/?utm_source=detent&utm_medium=readme). MIT licensed.
+Created by [37degree](https://37degr.ee/?utm_source=detent&utm_medium=readme), designed by Puru Sharma. MIT licensed.
 
 ## This folder
 
@@ -44,7 +44,9 @@ npm test
    - `BLOB_READ_WRITE_TOKEN` (the `keyline-signups` store)
    - `RESEND_API_KEY` and `RESEND_SEGMENT_ID`
    - optional: `NOTIFY_TO`, `NOTIFY_FROM` (a notice per signup), `THANKS_FROM`, `AUTH_REPLY_TO` (the thank-you email, and where replies go)
-3. Add the domain.
+3. Add the domain, then rebuild with it so canonical links and the sitemap use it: `DETENT_URL=https://your.domain npm run build`, and deploy again.
+
+The `*.vercel.app` address sends `noindex`, so search engines only index the real domain.
 
 The endpoint only accepts requests from its own domain, so it has to be served from the same domain as the site.
 
