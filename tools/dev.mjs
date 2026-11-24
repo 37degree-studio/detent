@@ -29,7 +29,8 @@ createServer(async (req, res) => {
     res.writeHead(out.status, Object.fromEntries(out.headers)); res.end(await out.text());
     return;
   }
-  const path = normalize(url.pathname === '/' ? '/index.html' : url.pathname);
+  let path = normalize(url.pathname === '/' ? '/index.html' : url.pathname);
+  if (!extname(path)) path += '.html';   // /encoder serves encoder.html, as cleanUrls does on Vercel
   try {
     const body = await readFile(join(root, 'site', path));
     res.writeHead(200, { 'Content-Type': types[extname(path)] || 'application/octet-stream' }); res.end(body);
