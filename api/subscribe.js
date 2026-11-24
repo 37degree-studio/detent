@@ -79,6 +79,18 @@ export async function handle(request, env = process.env, put = blobPut) {
   if (spam) return reply(200, { ok: true });
   if (error) return fail(400, error);
 
+  // No keys of its own yet: hand the signup to Linejig's endpoint, which writes to the same list. Server to server, so
+  // its same-origin check lets it through. figure says it came from Detent even if Linejig files the source as "other".
+  if (!env.BLOB_READ_WRITE_TOKEN && !env.RESEND_API_KEY) {
+    const r = await (env.fetch || fetch)(env.LINEJIG_SUBSCRIBE_URL || 'https://linejig.com/api/subscribe', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: sub.email, source: 'detent', figure: `detent:${sub.figure || 'home'}`.slice(0, 80) }),
+    }).catch(() => null);
+    if (r?.ok) return reply(200, { ok: true });
+    console.error('subscribe: linejig handoff failed', r?.status || 'network');
+    return fail(502, 'Could not save that. Try again.');
+  }
+
   const country = text(request.headers.get('x-vercel-ip-country'), 8);
   const saved = await save(env, put, { ...sub, at: new Date().toISOString(), ...(country ? { country } : {}) });
 

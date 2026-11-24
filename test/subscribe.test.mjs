@@ -34,7 +34,16 @@ test('rejects a bad email', async () => {
   assert.equal(r.status, 400);
 });
 
-test('says so when nothing is set up', async () => {
-  const r = await handle(post({ email: 'a@b.co' }), {}, async () => assert.fail('saved'));
-  assert.equal(r.status, 503);
+test('with no keys of its own, hands the signup to Linejig', async () => {
+  const sent = [];
+  const fakeFetch = async (url, init) => { sent.push([url, JSON.parse(init.body)]); return { ok: true }; };
+  const r = await handle(post({ email: 'A@b.co', figure: 'detent-pot' }), { fetch: fakeFetch }, async () => assert.fail('saved'));
+  assert.equal(r.status, 200);
+  assert.equal(sent[0][0], 'https://linejig.com/api/subscribe');
+  assert.deepEqual(sent[0][1], { email: 'a@b.co', source: 'detent', figure: 'detent:detent-pot' });
+});
+
+test('says so when the handoff fails', async () => {
+  const r = await handle(post({ email: 'a@b.co' }), { fetch: async () => ({ ok: false, status: 500 }) }, async () => assert.fail('saved'));
+  assert.equal(r.status, 502);
 });
