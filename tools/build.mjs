@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Build the Detent site (tools/seo/SEO.md). Node 18+, no dependencies.
 //
-//   node tools/build.mjs           writes site/: the home, a page per control and per hub, sitemap.xml, robots.txt, llms.txt, 404.html
+//   node tools/build.mjs           writes site/: the home, a page per control and per hub, sitemaps, robots.txt, llms.txt, 404.html
 //   node tools/build.mjs --check   changes nothing; reports pages that break the SEO rules and output that is out of date
 //
 // Every page is the same app: src/template.html plus the approved controls, looks and SwiftUI sources taken verbatim
@@ -224,11 +224,17 @@ li a { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0
 `);
 
 // ── Sitemap, robots, llms.txt ──
-const indexable = [['/', 'index.html'], ...PARTS.map(p => [ROUTES[p.tag].path, `${cfg.parts[p.tag].slug}.html`]), ...HUBS.map(h => [h.path, `${h.slug}.html`])];
+const indexable = [['/', 'index.html', 'home'], ...PARTS.map(p => [ROUTES[p.tag].path, `${cfg.parts[p.tag].slug}.html`, cfg.parts[p.tag].slug]), ...HUBS.map(h => [h.path, `${h.slug}.html`, h.slug])];
 out.set('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 ${MARK}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexable.map(([path]) => `  <url><loc>${url(path)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`).join('\n')}
+</urlset>
+`);
+out.set('sitemap-images.xml', `<?xml version="1.0" encoding="UTF-8"?>
+${MARK}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${indexable.filter(([, , c]) => card(c)).map(([path, , c]) => `  <url><loc>${url(path)}</loc><image:image><image:loc>${card(c)}</image:loc></image:image></url>`).join('\n')}
 </urlset>
 `);
 out.set('robots.txt', `${MARK_TXT}
@@ -237,6 +243,7 @@ Allow: /
 Disallow: /api/
 
 Sitemap: ${url('/sitemap.xml')}
+Sitemap: ${url('/sitemap-images.xml')}
 `);
 out.set('llms.txt', `# ${cfg.name}
 
@@ -301,13 +308,16 @@ for (const [path, name] of indexable) {
     if (!indexable.some(([p]) => p === href)) errors.push(`${where}: link to ${href}, which no page serves`);
   }
 }
+for (const [, img] of out.get('sitemap-images.xml').matchAll(/<image:loc>([^<]+)<\/image:loc>/g)) {
+  if (!img.startsWith(ORIGIN + '/') || !existsSync(at('site', img.slice(ORIGIN.length)))) errors.push(`site/sitemap-images.xml: image ${img} has no file in site/`);
+}
 finish();
 
 function finish() {
   for (const w of warnings) console.warn('warning: ' + w);
   for (const e of errors) console.error('error: ' + e);
   if (errors.length) { console.error(`${errors.length} error${errors.length > 1 ? 's' : ''}${CHECK ? '' : ' (site/ was written; fix and build again)'}`); process.exit(1); }
-  if (!CHECK) console.log(`site/: home, ${PARTS.length} control pages, ${HUBS.length} hubs, 404, sitemap.xml, robots.txt, llms.txt (${blocks.length} control scripts, ${swift.length} SwiftUI files)`);
+  if (!CHECK) console.log(`site/: home, ${PARTS.length} control pages, ${HUBS.length} hubs, 404, sitemap.xml, sitemap-images.xml, robots.txt, llms.txt (${blocks.length} control scripts, ${swift.length} SwiftUI files)`);
   else console.log(`check: ${indexable.length} indexable pages pass${warnings.length ? `, ${warnings.length} warning${warnings.length > 1 ? 's' : ''}` : ''}`);
   process.exit(0);
 }

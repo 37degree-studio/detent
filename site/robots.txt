@@ -4,3 +4,4 @@ Allow: /
 Disallow: /api/
 
 Sitemap: https://detent.37degr.ee/sitemap.xml
+Sitemap: https://detent.37degr.ee/sitemap-images.xml
