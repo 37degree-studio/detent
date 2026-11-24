@@ -13,7 +13,7 @@ Created by [37degree](https://37degr.ee/?utm_source=detent&utm_medium=readme), d
 | `tools/build.mjs` | Puts the two together into `site/`: the home, one page per control (`/encoder`, `/clock`, …), the 404, sitemap, robots and llms.txt. |
 | `tools/seo/` | Search: titles, descriptions and URLs (`site.json`), the share cards (`og.mjs`) and the rules (`SEO.md`). |
 | `site/` | What gets deployed. |
-| `api/subscribe.js` | The email gate's endpoint, a copy of Linejig's, writing to the same Blob store and Resend segment. Every record is tagged `source: "detent"`. |
+| `api/subscribe.js` | The email gate's endpoint, adapted from Linejig's. It writes to Detent's own Blob store and Resend segment, never Linejig's. Every record is tagged `source: "detent"`. |
 | `swift/` | The SwiftUI files on their own. |
 
 ## Work on it
@@ -40,11 +40,11 @@ npm test
 ## Deploy (Vercel)
 
 1. Create a Vercel project from this folder. Output directory is `site`, there's no build command (run `npm run build` before deploying). `vercel.json` turns on clean URLs, so `site/encoder.html` is served at `/encoder`.
-2. Copy these environment variables from the Linejig project so signups land in the same list:
-   - `BLOB_READ_WRITE_TOKEN` (the `keyline-signups` store)
-   - `RESEND_API_KEY` and `RESEND_SEGMENT_ID`
+2. Set these environment variables on the Detent project. Until one of the first two is set, the endpoint refuses signups.
+   - `BLOB_READ_WRITE_TOKEN` (Detent's own Blob store)
+   - `RESEND_API_KEY` and `RESEND_SEGMENT_ID` (Detent's own Resend segment)
    - optional: `NOTIFY_TO`, `NOTIFY_FROM` (a notice per signup), `THANKS_FROM`, `AUTH_REPLY_TO` (the thank-you email, and where replies go)
-3. Add the domain, then rebuild with it so canonical links and the sitemap use it: `DETENT_URL=https://your.domain npm run build`, and deploy again.
+3. Add the domain. If it isn't the `origin` in `tools/seo/site.json`, change `origin`, run `npm run og -- --force` and `npm run build`, and deploy again, so canonical links, the sitemaps and the share cards use it.
 
 The `*.vercel.app` address sends `noindex`, so search engines only index the real domain.
 

@@ -339,7 +339,7 @@ figure.lj figcaption { font-size: 12px; color: var(--faint) } figure.lj figcapti
   document.querySelectorAll('.lj-slot').forEach(s => s.outerHTML = figure(s.dataset.lj, s.dataset.title, s.dataset.spot, s.dataset.plate));
 
   // ── Email gate: the code is shown and copied only after someone leaves an email. One email unlocks the whole site. ──
-  // Signups go to Detent's own copy of Linejig's api/subscribe.js (same Blob store and Resend segment), on Detent's own domain.
+  // Signups go to api/subscribe.js on Detent's own domain, which keeps them in Detent's own Blob store and Resend segment.
   // A claude.ai artifact can't call it, so until the domain exists signups wait in this browser.
   const SIGNUP_URL = document.querySelector('meta[name="detent-signup"]')?.content || '';
   const unlocked = () => { try { return !!localStorage.getItem('detent-email'); } catch { return false; } };
