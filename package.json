@@ -1,0 +1,13 @@
+{
+  "name": "detent-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "python3 tools/build.py",
+    "dev": "node tools/dev.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.9.0"
+  }
+}

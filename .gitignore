@@ -1,0 +1,7 @@
+node_modules/
+.vercel/
+.env*
+.signups/
+.DS_Store
+.vercel
+.claude/
