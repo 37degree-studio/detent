@@ -1,5 +1,5 @@
 {
-  "note": "The one place for Detent's search copy and URLs (tools/seo/SEO.md). build.mjs reads it on every build. A path is permanent once published: change a title, never a slug (or add a redirect in vercel.json). Titles are the subject first; build.mjs adds ' · ' + name and refuses anything over 60 characters. Descriptions are one or two plain sentences under 160 characters: no counts typed by hand, no invented numbers, no other project's name. Every control in PARTS (src/catalog.html) needs an entry under parts, keyed by its tag; the build stops if one is missing.",
+  "note": "The one place for Detent's search copy and URLs (tools/seo/SEO.md). build.mjs reads it on every build. A path is permanent once published: change a title, never a slug (or add a redirect in vercel.json). Titles are the subject first; build.mjs adds ' · ' + name and refuses anything over 60 characters. Descriptions are one or two plain sentences under 160 characters: no counts typed by hand, no invented numbers, no other project's name. Every control in PARTS (src/catalog.html) needs an entry under parts, keyed by its tag; the build stops if one is missing. hubs: one page each at /<slug>, joining the controls whose group is in match.groups; slugs share one namespace with the controls. A hub with fewer than 3 controls is skipped with a note. card names the control its share card shows and its short line.",
   "name": "Detent",
   "origin": "https://detent.37degr.ee",
   "repo": "https://github.com/37degree-studio/detent",
@@ -67,5 +67,39 @@
       "title": "Clock: a time picker you set like a real clock",
       "description": "A clock time picker: turn the face and the minute hand clicks into each minute, the hour hand follows, and an A/P pusher sets the half. Web and SwiftUI, MIT."
     }
-  }
+  },
+  "hubs": [
+    {
+      "slug": "dials",
+      "name": "Dials and knobs",
+      "title": "Rotary knobs and dials: web components and SwiftUI",
+      "description": "Rotary knobs and dials that click through each detent, with sound and haptics. Web components with no dependencies, plus SwiftUI files. Free, MIT.",
+      "intro": "Knobs and dials you turn with a finger or a mouse. Each one clicks through its detents with sound and haptics: an encoder with hard end stops, a potentiometer with an optional centre detent, a bezel that ratchets round without end, and a touch ring with no moving parts. Each is one web component with no dependencies, with a SwiftUI file for iPhone and iPad.",
+      "match": {
+        "groups": [
+          "Dials"
+        ]
+      },
+      "card": {
+        "part": "detent-encoder",
+        "line": "Rotary knobs and dials that click into every detent."
+      }
+    },
+    {
+      "slug": "switches",
+      "name": "Switches and selectors",
+      "title": "Toggle and selector switches for web and SwiftUI",
+      "description": "Toggle and selector switches that hold against their detent, then snap over with a click and haptics. Web components and SwiftUI files, free and MIT.",
+      "intro": "Switches that resist your finger, then snap to the next position with a click you hear and feel. A slide toggle for on and off, and a rotary selector and a hi-fi slide selector for a few named positions, both with hard end stops. Each is one web component with no dependencies, with a SwiftUI file for iPhone and iPad.",
+      "match": {
+        "groups": [
+          "Switches"
+        ]
+      },
+      "card": {
+        "part": "detent-switch",
+        "line": "Toggles and selectors that snap over with a click."
+      }
+    }
+  ]
 }

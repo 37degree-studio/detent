@@ -82,7 +82,9 @@ requestAnimationFrame(() => requestAnimationFrame(() => {
 const cards = [
   { name: 'home', headline: cfg.home.card.headline, line: cfg.home.card.line, part: PARTS.find(p => p.tag === cfg.home.card.part), attrs: cfg.home.card.attrs || {} },
   ...PARTS.map(p => ({ name: cfg.parts[p.tag].slug, kicker: p.kind, headline: p.name, line: 'A tactile control for the web and SwiftUI, with sound and haptics.', part: p, attrs: {} })),
-];
+  ...(cfg.hubs || []).filter(h => PARTS.filter(p => h.match.groups.includes(p.group)).length >= 3)
+    .map(h => ({ name: h.slug, headline: h.name, line: h.card.line, part: PARTS.find(p => p.tag === h.card.part), attrs: h.card.attrs || {} })),
+].map(c => ({ name: c.name, png: `site/og/${c.name}.png`, size: [1200, 630], html: cardHtml(c) }));
 
 const hashFile = at('tools/seo/og-hashes.json');
 const hashes = existsSync(hashFile) ? JSON.parse(readFileSync(hashFile, 'utf8')) : {};
@@ -92,14 +94,14 @@ let drawn = 0;
 try {
   for (const c of cards) {
     if (ONLY && !ONLY.includes(c.name)) continue;
-    const html = cardHtml(c), hash = createHash('sha256').update(html).digest('hex').slice(0, 16), png = at('site/og', `${c.name}.png`);
+    const hash = createHash('sha256').update(c.html).digest('hex').slice(0, 16), png = at(c.png);
     if (!FORCE && hashes[c.name] === hash && existsSync(png)) continue;
     const file = join(tmp, `${c.name}.html`);
-    writeFileSync(file, html);
-    execFileSync(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1', '--window-size=1200,630',
+    writeFileSync(file, c.html);
+    execFileSync(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1', `--window-size=${c.size}`,
       '--virtual-time-budget=6000', `--user-data-dir=${join(tmp, 'profile')}`, `--screenshot=${png}`, pathToFileURL(file).href], { stdio: 'pipe' });
     hashes[c.name] = hash; drawn++;
-    console.log(`site/og/${c.name}.png`);
+    console.log(c.png);
   }
 } finally { rmSync(tmp, { recursive: true, force: true }); }
 writeFileSync(hashFile, JSON.stringify(Object.fromEntries(Object.entries(hashes).sort()), null, 2) + '\n');

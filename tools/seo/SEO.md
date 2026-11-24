@@ -23,11 +23,23 @@ This is judgement, not measurement: there is no search-volume data yet. Look aga
 |---|---|---|
 | Home | `/` | `site/index.html` |
 | A control | `/<slug>`, e.g. `/encoder` | `site/<slug>.html`, served by `cleanUrls` |
+| A hub | `/<slug>`, e.g. `/dials`, `/switches` | `site/<slug>.html`, from `hubs` in `site.json` |
 | Not found | (any other path) | `site/404.html`, `noindex` |
 | Share cards | `/og/<slug>.png`, `/og/home.png` | drawn by `tools/seo/og.mjs` |
 
-A slug never changes once published. Rename the control and its title instead. If a URL must move, add a permanent
+Control slugs, hub slugs and the reserved names share one namespace: the build stops on a collision. A slug never
+changes once published. Rename the control and its title instead. If a URL must move, add a permanent
 redirect in `vercel.json`. The old `#detent-<name>` links still work: on the deployed site they move to the control's page.
+
+## Hubs
+
+A hub is a page for one kind of control, for searches such as "rotary knob web component" or "toggle switch with
+haptics". Each is one entry in `hubs` in `site.json`: `slug`, `name` (its `<h1>`, footer link and card headline),
+`title`, `description`, `intro` (the paragraph under the `<h1>`), `match.groups` (it lists the controls whose `group` is
+one of these) and `card` (`part` and optional `attrs` for the control on its share card, and `line`, its short line).
+A hub that matches fewer than 3 controls is not written, and the build prints a note. The `Time` group has 2, so it
+has no hub. A control's breadcrumb links its group to the first hub that lists it, and every page's footer links every
+hub.
 
 ## Rules for every page
 
@@ -49,16 +61,17 @@ visible questions word for word, that links point to real pages, and that `site/
 
 ## Files
 
-- `tools/seo/site.json`: the name, origin, repo, studio, home copy and each control's slug, title and description.
+- `tools/seo/site.json`: the name, origin, repo, studio, home copy, each control's slug, title and description, and the hubs.
   Change the domain here, then run `npm run og -- --force && npm run build`.
 - `tools/build.mjs`: builds every file in `site/` except the cards and `favicon.svg`: the home, one page per control,
-  `404.html`, `sitemap.xml`, `robots.txt` and `llms.txt`. It removes generated files that no page makes any more.
+  one page per hub, `404.html`, `sitemap.xml`, `robots.txt` and `llms.txt`. It removes generated files that no page makes any more.
   `tools/build.py` is a shim that runs it.
 - `tools/seo/og.mjs`: draws the share cards with the local Chrome, using the real controls. It redraws only the cards
   whose inputs changed (`tools/seo/og-hashes.json`). Use `--force` to redraw them all, or `--only home,clock` for some.
 
 Structured data: the home has `WebSite`, `SoftwareSourceCode` and `FAQPage`. Each control's page has
-`SoftwareSourceCode` and `BreadcrumbList`.
+`SoftwareSourceCode` and `BreadcrumbList` (Components, its hub if it has one, the control). Each hub has
+`CollectionPage` with an `ItemList` of its controls, and `BreadcrumbList`.
 
 ## Workflow
 

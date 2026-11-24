@@ -268,7 +268,7 @@ footer.end { border-top: 0; padding-top: 0; margin-top: clamp(96px, 12vw, 160px)
     </section>
   </main>
   <main id="detail" hidden></main>
-  <footer class="end"><span>Detent · controls that behave like hardware · MIT</span><span><a href="https://github.com/37degree-studio/detent" target="_blank" rel="noopener">GitHub</a></span><span>Studio · <a href="https://37degr.ee/?utm_source=detent&amp;utm_medium=footer" target="_blank" rel="noopener">37degree</a></span></footer>
+  <footer class="end"><span>Detent · controls that behave like hardware · MIT</span><!--SEO:HUBS--><span><a href="https://github.com/37degree-studio/detent" target="_blank" rel="noopener">GitHub</a></span><span>Studio · <a href="https://37degr.ee/?utm_source=detent&amp;utm_medium=footer" target="_blank" rel="noopener">37degree</a></span></footer>
 </div>
 
 <!--BLOCKS-->
@@ -296,7 +296,7 @@ footer.end { border-top: 0; padding-top: 0; margin-top: clamp(96px, 12vw, 160px)
   const snippet = (p, st) => `<!-- ${p.name} · Detent -->\n${tag(p, attrText(stateAttrs(p, st)))}\n\n<!-- Feel: sound + haptics. Paste once per page, before any Detent control. -->\n<script>\n${src('feel')}\n${END}\n` +
     [p.fn, `${p.fn}-look-${st.look}`].map(id => `\n<script>\n${src(id)}\n${END}\n`).join('');
   const home = document.getElementById('home'), detail = document.getElementById('detail');
-  // ROUTES (written by tools/seo/build.mjs): tag → { path, title, description }; '' is the home. The deployed site has a real
+  // ROUTES (written by tools/seo/build.mjs): tag → { path, title, description, hub? }; '' is the home, hub:<slug> a hub. The deployed site has a real
   // page per control; anywhere else (a file, a preview with no server) the same links fall back to the #tag routes.
   const ROUTES = (() => { try { return JSON.parse(document.getElementById('detent-routes').textContent); } catch { return {}; } })();
   const clean = path => path.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/(.)\/$/, '$1');
@@ -391,7 +391,7 @@ footer.end { border-top: 0; padding-top: 0; margin-top: clamp(96px, 12vw, 160px)
     const sample = k => { const v = p.attrs.light[k] ?? p.attrs.dark[k]; return v === '' ? 'boolean' : v !== undefined ? `"${v}"` : '—'; };
     const ABOUT = { value: 'The starting value. Read the live one from el.value.', label: 'The printed or spoken name.', detents: 'How many notches; 0 makes it smooth and silent.', checked: 'Starts switched on.', name: 'Submits with forms under this name.', mode: 'ratchet, or weighted so a flick carries on 2 to 4 clicks.', direction: 'both, or one-way like a dive bezel.', detent: 'center adds a bump at 12 o’clock.', min: 'The lowest value.', max: 'The highest value.', steps: 'How many positions.', options: 'The positions, comma-separated.', time: 'The starting time, HH:MM.' };
     detail.innerHTML = `
-      <nav class="crumbs"><a href="${PATHS ? '/#components' : '#'}" data-tag="">Components</a><span>›</span><span>${p.group}</span><span>›</span><span>${p.name}</span></nav>
+      <nav class="crumbs"><a href="${PATHS ? '/#components' : '#'}" data-tag="">Components</a><span>›</span>${ROUTES[p.tag]?.hub ? `<a href="${PATHS ? ROUTES[p.tag].hub : '#'}" data-tag="">${p.group}</a>` : `<span>${p.group}</span>`}<span>›</span><span>${p.name}</span></nav>
       <div class="dhead"><h1 tabindex="-1">${p.name}</h1><p>${p.lede}</p></div>
       <div class="tabs" role="tablist"><button role="tab" type="button" data-tab="preview">◎ Preview</button><button role="tab" type="button" data-tab="code">&lt;/&gt; Code</button></div>
       <div id="dview"></div>
@@ -481,7 +481,7 @@ footer.end { border-top: 0; padding-top: 0; margin-top: clamp(96px, 12vw, 160px)
     } else {
       currentTag = '';
       detailHook = null; detail.hidden = true; detail.innerHTML = ''; home.hidden = false; document.body.classList.remove('ondetail');
-      setHead(ROUTES[''], 'Detent');
+      setHead((PATHS && Object.values(ROUTES).find(r => r.path === clean(location.pathname))) || ROUTES[''], 'Detent');
       const anchor = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
       if (anchor) anchor.scrollIntoView(); else scrollTo(0, homeScroll);
     }

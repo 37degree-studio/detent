@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Build the Detent site (tools/seo/SEO.md). Node 18+, no dependencies.
 //
-//   node tools/build.mjs           writes site/: the home, one page per control, sitemap.xml, robots.txt, llms.txt, 404.html
+//   node tools/build.mjs           writes site/: the home, a page per control and per hub, sitemap.xml, robots.txt, llms.txt, 404.html
 //   node tools/build.mjs --check   changes nothing; reports pages that break the SEO rules and output that is out of date
 //
 // Every page is the same app: src/template.html plus the approved controls, looks and SwiftUI sources taken verbatim
@@ -44,16 +44,27 @@ const tag = (p, attrs) => `<${p.tag}${attrText(attrs)}></${p.tag}>`;
 for (const p of PARTS) if (!cfg.parts[p.tag]) errors.push(`tools/seo/site.json has no entry for ${p.tag} (${p.name}): give it a slug, title and description`);
 for (const t of Object.keys(cfg.parts)) if (!PARTS.some(p => p.tag === t)) warnings.push(`tools/seo/site.json lists ${t}, which is not in PARTS`);
 const slugs = new Set();
-for (const [t, s] of Object.entries(cfg.parts)) {
+for (const [t, s] of [...Object.entries(cfg.parts), ...(cfg.hubs || []).map(h => [`hub ${h.slug}`, h])]) {
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(s.slug)) errors.push(`${t}: slug "${s.slug}" must be lowercase words joined by hyphens`);
   if (['index', '404', 'og', 'api', 'sitemap', 'robots', 'llms', 'favicon'].includes(s.slug)) errors.push(`${t}: slug "${s.slug}" is reserved`);
   if (slugs.has(s.slug)) errors.push(`slug "${s.slug}" is used twice`); slugs.add(s.slug);
 }
 if (errors.length) finish();
 
+// ── Hubs: a page per group of controls (site.json hubs). One with fewer than MIN_HUB controls is not written. ──
+const MIN_HUB = 3;
+const HUBS = (cfg.hubs || []).flatMap(h => {
+  const parts = PARTS.filter(p => h.match.groups.includes(p.group));
+  if (parts.length >= MIN_HUB) return [{ ...h, path: '/' + h.slug, parts }];
+  console.log(`note: hub /${h.slug} skipped: it matches ${parts.length} control${parts.length === 1 ? '' : 's'}, fewer than ${MIN_HUB}`);
+  return [];
+});
+const hubOf = p => HUBS.find(h => h.parts.includes(p));
+
 const title = t => `${t} · ${cfg.name}`;
 const ROUTES = { '': { path: '/', title: title(cfg.home.title), description: cfg.home.description } };
-for (const p of PARTS) { const s = cfg.parts[p.tag]; ROUTES[p.tag] = { path: '/' + s.slug, title: title(s.title), description: s.description }; }
+for (const p of PARTS) { const s = cfg.parts[p.tag], h = hubOf(p); ROUTES[p.tag] = { path: '/' + s.slug, title: title(s.title), description: s.description, ...(h && { hub: h.path }) }; }
+for (const h of HUBS) ROUTES[`hub:${h.slug}`] = { path: h.path, title: title(h.title), description: h.description };
 const url = path => ORIGIN + path;
 const cardFile = name => `og/${name}.png`;
 const card = name => existsSync(at('site', cardFile(name))) ? url('/' + cardFile(name)) : null;
@@ -84,6 +95,8 @@ const head = ({ path, title: t, description, image, imageAlt, jsonld }) => [
   ...jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`),
 ].join('\n');
 
+const breadcrumbs = trail => ({ '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: trail.map(([name, path], k) => ({ '@type': 'ListItem', position: k + 1, name, item: url(path) })) });
 const org = { '@type': 'Organization', name: cfg.studio.name, url: cfg.studio.url };
 const site = { '@type': 'WebSite', name: cfg.name, url: url('/') };
 const code = (name, description, path, image) => ({
@@ -95,8 +108,9 @@ const code = (name, description, path, image) => ({
 let shell = template
   .replace('<!--BLOCKS-->', () => '<!-- The approved Detent controls, verbatim. -->\n' + blocks.join('\n\n') + '\n\n<!-- SwiftUI sources -->\n' + swift.join('\n'))
   .replace('  //PARTS', () => partsSrc)
-  .replace(/<meta name="description"[^>]*>\n/, '').replace(/<meta property="og:[a-z]+"[^>]*>\n/g, '');
-for (const ph of ['<!--BLOCKS-->', '  //PARTS', '<title>Detent</title>', '<!--SEO:GRID-->', '<!--SEO:SHOWPIECE-->', '<main id="detail" hidden></main>'])
+  .replace(/<meta name="description"[^>]*>\n/, '').replace(/<meta property="og:[a-z]+"[^>]*>\n/g, '')
+  .replace('<!--SEO:HUBS-->', () => HUBS.length ? `<span>${HUBS.map(h => `<a href="${h.path}" data-tag="">${esc(h.name)}</a>`).join(' · ')}</span>` : '');
+for (const ph of ['<!--BLOCKS-->', '  //PARTS', '<title>Detent</title>', '<!--SEO:GRID-->', '<!--SEO:SHOWPIECE-->', '<!--SEO:HUBS-->', '<main id="detail" hidden></main>'])
   if (!template.includes(ph)) errors.push(`src/template.html is missing ${ph}`);
 if (errors.length) finish();
 
@@ -109,15 +123,17 @@ const pageWith = (headHtml, homeHtml, detailHtml) => {
 };
 
 // ── Home ──
+// The home grid and each hub's grid share this markup: the app paints every .stage[data-i] with PARTS[i] in the chosen look.
+const grid = parts => parts.map(p => `
+      <div class="plate${['detent-bezel', 'detent-clock'].includes(p.tag) || p.wide ? ' big' : ''}">
+        <div class="stage" data-i="${PARTS.indexOf(p)}">${p.kind.toLowerCase() !== p.name.toLowerCase() ? `<span class="tag">${esc(p.kind)}</span>` : ''}${tag(p, p.attrs.light)}</div>
+        <a class="cap" href="${ROUTES[p.tag].path}" data-tag="${p.tag}"><h3>${esc(p.name)}</h3><span class="go">↗</span><p>${esc(p.note)}</p></a>
+      </div>`).join('') + '\n    ';
 const first = PARTS[0], firstHref = ROUTES[first.tag].path;
 const homeMain = template.match(/<main id="home">[\s\S]*?\n  <\/main>/)[0]
   .replaceAll('{{START_HREF}}', firstHref).replaceAll('{{START_TAG}}', first.tag).replaceAll('{{START_NAME}}', esc(first.name))
   .replace('<!--SEO:SHOWPIECE-->', () => { const s = PARTS.find(x => x.tag === cfg.home.card.part) || first; return tag(s, { ...s.attrs.light, look: 'braun', mode: 'weighted' }); })
-  .replace('<!--SEO:GRID-->', () => PARTS.map((p, i) => `
-      <div class="plate${['detent-bezel', 'detent-clock'].includes(p.tag) || p.wide ? ' big' : ''}">
-        <div class="stage" data-i="${i}">${p.kind.toLowerCase() !== p.name.toLowerCase() ? `<span class="tag">${esc(p.kind)}</span>` : ''}${tag(p, p.attrs.light)}</div>
-        <a class="cap" href="${ROUTES[p.tag].path}" data-tag="${p.tag}"><h3>${esc(p.name)}</h3><span class="go">↗</span><p>${esc(p.note)}</p></a>
-      </div>`).join('') + '\n    ');
+  .replace('<!--SEO:GRID-->', () => grid(PARTS));
 const faq = [...homeMain.matchAll(/<details><summary>([\s\S]*?)<\/summary><p>([\s\S]*?)<\/p><\/details>/g)]
   .map(([, q, a]) => ({ q: plain(q), a: plain(a) }));
 function plain(html) { return html.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim(); }
@@ -135,11 +151,11 @@ out.set('index.html', pageWith(head({
 
 // ── One page per control. The static copy here is what the app's renderDetail draws first; the app then takes over. ──
 PARTS.forEach((p, i) => {
-  const r = ROUTES[p.tag], s = cfg.parts[p.tag];
+  const r = ROUTES[p.tag], s = cfg.parts[p.tag], h = hubOf(p);
   const prev = PARTS[(i - 1 + PARTS.length) % PARTS.length], next = PARTS[(i + 1) % PARTS.length];
   const looks = sorted(p);
   const detail = `<main id="detail" data-tag="${p.tag}">
-      <nav class="crumbs"><a href="/#components" data-tag="">Components</a><span>›</span><span>${esc(p.group)}</span><span>›</span><span>${esc(p.name)}</span></nav>
+      <nav class="crumbs"><a href="/#components" data-tag="">Components</a><span>›</span>${r.hub ? `<a href="${r.hub}" data-tag="">${esc(p.group)}</a>` : `<span>${esc(p.group)}</span>`}<span>›</span><span>${esc(p.name)}</span></nav>
       <div class="dhead"><h1 tabindex="-1">${esc(p.name)}</h1><p>${esc(p.lede)}</p></div>
       <div id="dview"><div class="preview"><span class="small tl">${esc(p.kind)}</span>${tag(p, { ...p.attrs.light, ...(looks[0] !== p.looks[0] && { look: looks[0] }) })}</div></div>
       <section class="sec"><div class="sh"><h2>${looks.length} looks, one mechanism.</h2></div>
@@ -156,12 +172,29 @@ PARTS.forEach((p, i) => {
     ...r, image, imageAlt: `${p.name}, a ${p.kind.toLowerCase()} from ${cfg.name}, in the ${LOOK_NAMES[looks[0]]} look`,
     jsonld: [
       code(p.name, s.description, r.path, image),
-      { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Components', item: url('/') },
-        { '@type': 'ListItem', position: 2, name: p.name, item: url(r.path) }] },
+      breadcrumbs([['Components', '/'], ...(h ? [[h.name, h.path]] : []), [p.name, r.path]]),
     ],
   }), '<main id="home" hidden></main>', detail));
 });
+
+// ── One page per hub: the home's shell with its own heading, copy and grid. ──
+for (const h of HUBS) {
+  const main = `<main id="home">
+    <nav class="crumbs"><a href="/#components" data-tag="" data-anchor="components">Components</a><span>›</span><span>${esc(h.name)}</span></nav>
+    <div class="dhead"><h1>${esc(h.name)}</h1><p>${esc(h.intro)}</p></div>
+    <div class="grid">${grid(h.parts)}</div>
+    <section class="sec"><a class="btn" href="/#components" data-tag="" data-anchor="components">See every control →</a></section>
+  </main>`;
+  const image = card(h.slug);
+  out.set(`${h.slug}.html`, pageWith(head({
+    ...ROUTES[`hub:${h.slug}`], image, imageAlt: `${h.name} from ${cfg.name}: ${h.parts.map(p => p.name).join(', ')}`,
+    jsonld: [
+      { '@context': 'https://schema.org', '@type': 'CollectionPage', name: h.name, description: h.description, url: url(h.path), isPartOf: site, ...(image && { image }),
+        mainEntity: { '@type': 'ItemList', itemListElement: h.parts.map((p, k) => ({ '@type': 'ListItem', position: k + 1, url: url(ROUTES[p.tag].path), name: p.name })) } },
+      breadcrumbs([['Components', '/'], [h.name, h.path]]),
+    ],
+  }), main, '<main id="detail" hidden></main>'));
+}
 
 // ── 404: a small page of its own, not indexed. ──
 out.set('404.html', `<!doctype html>
@@ -191,7 +224,7 @@ li a { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0
 `);
 
 // ── Sitemap, robots, llms.txt ──
-const indexable = [['/', 'index.html'], ...PARTS.map(p => [ROUTES[p.tag].path, `${cfg.parts[p.tag].slug}.html`])];
+const indexable = [['/', 'index.html'], ...PARTS.map(p => [ROUTES[p.tag].path, `${cfg.parts[p.tag].slug}.html`]), ...HUBS.map(h => [h.path, `${h.slug}.html`])];
 out.set('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 ${MARK}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -274,7 +307,7 @@ function finish() {
   for (const w of warnings) console.warn('warning: ' + w);
   for (const e of errors) console.error('error: ' + e);
   if (errors.length) { console.error(`${errors.length} error${errors.length > 1 ? 's' : ''}${CHECK ? '' : ' (site/ was written; fix and build again)'}`); process.exit(1); }
-  if (!CHECK) console.log(`site/: home, ${PARTS.length} control pages, 404, sitemap.xml, robots.txt, llms.txt (${blocks.length} control scripts, ${swift.length} SwiftUI files)`);
+  if (!CHECK) console.log(`site/: home, ${PARTS.length} control pages, ${HUBS.length} hubs, 404, sitemap.xml, robots.txt, llms.txt (${blocks.length} control scripts, ${swift.length} SwiftUI files)`);
   else console.log(`check: ${indexable.length} indexable pages pass${warnings.length ? `, ${warnings.length} warning${warnings.length > 1 ? 's' : ''}` : ''}`);
   process.exit(0);
 }
