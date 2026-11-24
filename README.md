@@ -4,6 +4,25 @@ Dials, knobs and switches that behave like hardware: they hold against each dete
 
 Created by [37degree](https://37degr.ee/?utm_source=detent&utm_medium=readme), designed by Puru Sharma. MIT licensed.
 
+## Use it
+
+```bash
+npm i detent
+```
+
+```js
+import 'detent/encoder';                 // <detent-encoder> in its default look
+import 'detent/encoder/looks/braun';     // or pick a look
+```
+
+Give your coding agent the Detent skill (Claude Code, Codex, Cursor, Gemini CLI, Copilot, Windsurf and others):
+
+```bash
+npx detent install
+```
+
+Or copy a control's snippet from the site after leaving your email.
+
 ## This folder
 
 | Path | What it is |

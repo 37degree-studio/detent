@@ -1,0 +1,8 @@
+# Everything here except these is written by scripts/build.mjs from src/catalog.html.
+/*
+!/.gitignore
+!/package.json
+!/README.md
+!/bin/
+!/scripts/
+!/templates/
